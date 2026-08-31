@@ -1,0 +1,1073 @@
+{
+  "/ImageGalleryIacStack": [
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/Custom::S3AutoDeleteObjectsCustomResourceProvider": [
+    {
+      "type": "aws:cdk:is-custom-resource-handler-customResourceProvider",
+      "data": true
+    }
+  ],
+  "/ImageGalleryIacStack/ApiUrl": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiUrl"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:247:5)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ApiKeyId": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiKeyId"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:248:5)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/BucketName": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BucketName"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:249:5)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/TableName": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TableName"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:250:5)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/UserPoolId": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UserPoolId"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:251:5)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/UserPoolClientId": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UserPoolClientId"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:252:5)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/GalleryUserPool/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "GalleryUserPool56518342"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new UserPool2 in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:20:22)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/GalleryUserPoolClient/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "GalleryUserPoolClientE6B3836F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new UserPoolClient2 in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:42:28)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryBucket/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryBucketAF87B9DD"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Bucket2 in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:56:20)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:analytics:mixin",
+      "data": {
+        "mixin": "aws-cdk-lib.aws_s3.mixins.BucketAutoDeleteObjects"
+      }
+    }
+  ],
+  "/ImageGalleryIacStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageVaultTable/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageVaultTableF5A78358"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Table2 in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:77:19)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/CreateUploadUrlFunction/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CreateUploadUrlFunctionEEFDA379"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:116:35)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/CompleteUploadFunction/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CompleteUploadFunction353D2749"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:122:34)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ListPublicImagesFunction/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ListPublicImagesFunctionC561E5D8"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:128:36)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ListMyImagesFunction/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ListMyImagesFunction18CE2369"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:134:32)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/DeleteImageFunction/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "DeleteImageFunction98837557"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:140:31)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiC55A94E9"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new RestApi2 in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:164:17)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Account": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiAccount9403F6F5"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new RestApi2 in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:164:17)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Endpoint": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiEndpoint826CA48C"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new RestApi2 in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:164:17)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/GalleryAuthorizer/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "GalleryAuthorizerEDB686DA"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new CognitoUserPoolsAuthorizer2 in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:204:24)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/CDKMetadata/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadata"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryBucket/Policy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryBucketPolicy731586B0"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Bucket2 in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:56:20)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals..."
+      ]
+    },
+    {
+      "type": "aws:cdk:analytics:mixin",
+      "data": {
+        "mixin": "aws-cdk-lib.aws_s3.mixins.BucketPolicyStatements"
+      }
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryBucket/AutoDeleteObjectsCustomResource/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryBucketAutoDeleteObjectsCustomResourceCF64A18A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/CreateUploadUrlFunction/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CreateUploadUrlFunctionServiceRole9507D8E1"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:116:35)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/CompleteUploadFunction/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CompleteUploadFunctionServiceRoleFCDBAB0C"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:122:34)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ListPublicImagesFunction/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ListPublicImagesFunctionServiceRole5677FA23"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:128:36)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ListMyImagesFunction/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ListMyImagesFunctionServiceRole8407CF7D"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:134:32)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/DeleteImageFunction/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "DeleteImageFunctionServiceRole0B63B483"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:140:31)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/CloudWatchRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiCloudWatchRole02F60B3D"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new RestApi2 in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:164:17)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Deployment/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiDeployment28E0C3E6ddc93d3218b4c5a1189a6e2741cc3e1d"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new RestApi2 in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:164:17)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/DeploymentStage.prod/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiDeploymentStageprodE7FBB211"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new RestApi2 in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:164:17)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default4xxCors/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiDefault4xxCors6AC95807"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addGatewayResponse in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:179:9)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default5xxCors/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiDefault5xxCors79A27B5A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addGatewayResponse in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:186:9)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/ClientApiKey/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiClientApiKeyB12C733F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addApiKey in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:194:24)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/UsagePlan/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiUsagePlan600226D2"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addUsagePlan in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:196:22)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/UsagePlan/UsagePlanKeyResource:ImageGalleryIacStackImageGalleryApiClientApiKey9E171F9F": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiUsagePlanUsagePlanKeyResourceImageGalleryIacStackImageGalleryApiClientApiKey9E171F9FC2B78BFB"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addApiKey in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:201:10)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/CreateUploadUrlFunction/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CreateUploadUrlFunctionServiceRoleDefaultPolicy5C80B33A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/CompleteUploadFunction/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CompleteUploadFunctionServiceRoleDefaultPolicyAC303504"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ListPublicImagesFunction/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ListPublicImagesFunctionServiceRoleDefaultPolicyEC80DC12"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ListMyImagesFunction/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ListMyImagesFunctionServiceRoleDefaultPolicyE76E6714"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/DeleteImageFunction/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "DeleteImageFunctionServiceRoleDefaultPolicy671CB9EA"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/OPTIONS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiOPTIONSA35E04FE"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new RestApi2 in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:164:17)"
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimages9538547B"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...RootResource.addResource in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:231:37)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/OPTIONS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagesOPTIONS0422346A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...RootResource.addResource in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:231:37)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)"
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/upload/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagesupload8F23ABFF"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addResource in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:232:43)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/public/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagespublicBBB9F56A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addResource in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:233:43)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/mine/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagesmineECD0A2B8"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addResource in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:234:41)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/{id}/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagesid4D291931"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addResource in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:235:46)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/upload/OPTIONS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagesuploadOPTIONS6D7AE7A9"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addResource in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:232:43)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)"
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/upload/POST/ApiPermission.ImageGalleryIacStackImageGalleryApi073DFF19.POST..images.upload": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagesuploadPOSTApiPermissionImageGalleryIacStackImageGalleryApi073DFF19POSTimagesupload5D3627F7"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:238:20)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/upload/POST/ApiPermission.Test.ImageGalleryIacStackImageGalleryApi073DFF19.POST..images.upload": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagesuploadPOSTApiPermissionTestImageGalleryIacStackImageGalleryApi073DFF19POSTimagesupload35B9CC1F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:238:20)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/upload/POST/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagesuploadPOST939D7EA3"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:238:20)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/public/OPTIONS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagespublicOPTIONSAA0A33E7"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addResource in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:233:43)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)"
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/public/GET/ApiPermission.ImageGalleryIacStackImageGalleryApi073DFF19.GET..images.public": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagespublicGETApiPermissionImageGalleryIacStackImageGalleryApi073DFF19GETimagespublicC7D0FC75"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:240:20)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/public/GET/ApiPermission.Test.ImageGalleryIacStackImageGalleryApi073DFF19.GET..images.public": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagespublicGETApiPermissionTestImageGalleryIacStackImageGalleryApi073DFF19GETimagespublicE9CA6E36"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:240:20)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/public/GET/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagespublicGETD9CAA05C"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:240:20)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/mine/OPTIONS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagesmineOPTIONS1FFA7E43"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addResource in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:234:41)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)"
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/mine/GET/ApiPermission.ImageGalleryIacStackImageGalleryApi073DFF19.GET..images.mine": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagesmineGETApiPermissionImageGalleryIacStackImageGalleryApi073DFF19GETimagesmineF1C26847"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:241:18)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/mine/GET/ApiPermission.Test.ImageGalleryIacStackImageGalleryApi073DFF19.GET..images.mine": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagesmineGETApiPermissionTestImageGalleryIacStackImageGalleryApi073DFF19GETimagesmineABA91284"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:241:18)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/mine/GET/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagesmineGET8DC1FD00"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:241:18)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/{id}/OPTIONS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagesidOPTIONS4DA13FD0"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addResource in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:235:46)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)"
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/{id}/complete/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagesidcomplete8F20D5AA"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addResource in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:236:48)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/{id}/DELETE/ApiPermission.ImageGalleryIacStackImageGalleryApi073DFF19.DELETE..images.{id}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagesidDELETEApiPermissionImageGalleryIacStackImageGalleryApi073DFF19DELETEimagesid761C4DA1"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:242:23)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/{id}/DELETE/ApiPermission.Test.ImageGalleryIacStackImageGalleryApi073DFF19.DELETE..images.{id}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagesidDELETEApiPermissionTestImageGalleryIacStackImageGalleryApi073DFF19DELETEimagesidD2225A3B"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:242:23)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/{id}/DELETE/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagesidDELETE82698099"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:242:23)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/{id}/complete/OPTIONS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagesidcompleteOPTIONS96DA0EFD"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addResource in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:236:48)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)"
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/{id}/complete/POST/ApiPermission.ImageGalleryIacStackImageGalleryApi073DFF19.POST..images.{id}.complete": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagesidcompletePOSTApiPermissionImageGalleryIacStackImageGalleryApi073DFF19POSTimagesidcompleteFDF691A1"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:239:22)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/{id}/complete/POST/ApiPermission.Test.ImageGalleryIacStackImageGalleryApi073DFF19.POST..images.{id}.complete": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagesidcompletePOSTApiPermissionTestImageGalleryIacStackImageGalleryApi073DFF19POSTimagesidcomplete4A1EB451"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:239:22)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/ImageGalleryIacStack/ImageGalleryApi/Default/images/{id}/complete/POST/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ImageGalleryApiimagesidcompletePOST83EF3CCA"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new ImageGalleryIacStack (C:\\Users\\Afro Technology\\Downloads\\files\\lib\\image-gallery-iac-stack.ts:239:22)",
+        "<anonymous> (C:\\Users\\Afro Technology\\Downloads\\files\\bin\\image-gallery-iac.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ]
+}

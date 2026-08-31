@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sign up &mdash; Vault</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+
+<div class="config-banner" id="configBanner">
+  <div class="shell">⚠️ This app isn't fully configured yet — check the setup instructions.</div>
+</div>
+
+<header class="topbar">
+  <div class="shell topbar__inner">
+    <a href="public.html" class="brand" style="text-decoration:none;">
+      <span class="brand__mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
+      </span>
+      Vault
+    </a>
+    <a href="public.html" class="topbar__link">Browse public gallery &rarr;</a>
+  </div>
+</header>
+
+<div class="auth-shell">
+  <div class="auth-card">
+
+    <!-- Step 1: create account -->
+    <div class="auth-step is-active" id="stepRegister">
+      <div class="auth-card__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+      </div>
+      <h1>Create your account</h1>
+      <p class="sub">Sign up to start uploading and organizing your own gallery.</p>
+
+      <form id="registerForm">
+        <div class="field">
+          <label for="regEmail">Email</label>
+          <input type="email" id="regEmail" placeholder="you@example.com" required autocomplete="email" />
+        </div>
+        <div class="field">
+          <label for="regPassword">Password</label>
+          <input type="password" id="regPassword" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required autocomplete="new-password" />
+          <div class="field__hint">At least 8 characters, with a mix of letters and numbers.</div>
+        </div>
+        <div class="field">
+          <label for="regPasswordConfirm">Confirm password</label>
+          <input type="password" id="regPasswordConfirm" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required autocomplete="new-password" />
+          <div class="field__error" id="matchError">Passwords don't match.</div>
+        </div>
+        <button type="submit" class="btn btn-primary full-width" id="registerBtn">
+          <span id="registerBtnText">Create account</span>
+        </button>
+      </form>
+
+      <div class="auth-card__footer">Already have an account? <a href="login.html">Log in</a></div>
+    </div>
+
+    <!-- Step 2: confirm code -->
+    <div class="auth-step" id="stepConfirm">
+      <div class="auth-card__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+      </div>
+      <h1>Check your email</h1>
+      <p class="sub">We sent a 6-digit confirmation code to <strong id="confirmEmailLabel"></strong>.</p>
+
+      <form id="confirmForm">
+        <div class="field">
+          <label for="confirmCode">Confirmation code</label>
+          <input type="text" id="confirmCode" placeholder="123456" inputmode="numeric" maxlength="6" required />
+        </div>
+        <button type="submit" class="btn btn-primary full-width" id="confirmBtn">
+          <span id="confirmBtnText">Confirm &amp; continue</span>
+        </button>
+        <button type="button" class="btn btn-ghost full-width" id="resendBtn" style="margin-top:4px;">Resend code</button>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<script src="assets/auth.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  if (AUTH_CONFIG.REGION.includes("YOUR_REGION") || AUTH_CONFIG.USER_POOL_CLIENT_ID.includes("YOUR_USER_POOL")) {
+    document.getElementById("configBanner").classList.add("is-visible");
+  }
+
+  if (getCurrentUser()) {
+    window.location.href = "index.html";
+  }
+
+  var toastStack = document.getElementById("toastStack");
+  function toast(message, type) {
+    var node = document.createElement("div");
+    node.className = "toast " + (type || "error");
+    var icon = type === "success"
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+    node.innerHTML = '<span class="toast__icon">' + icon + '</span><span class="toast__msg"></span>';
+    node.querySelector(".toast__msg").textContent = message;
+    toastStack.appendChild(node);
+    setTimeout(function () {
+      node.classList.add("is-leaving");
+      setTimeout(function () { node.remove(); }, 260);
+    }, 4200);
+  }
+
+  var stepRegister = document.getElementById("stepRegister");
+  var stepConfirm = document.getElementById("stepConfirm");
+  var confirmEmailLabel = document.getElementById("confirmEmailLabel");
+  var pendingEmail = "";
+
+  function showConfirmStep(email) {
+    pendingEmail = email;
+    confirmEmailLabel.textContent = email;
+    stepRegister.classList.remove("is-active");
+    stepConfirm.classList.add("is-active");
+  }
+
+  // Deep link support: signup.html?email=x@y.com&step=confirm
+  // (used when login.html redirects an unconfirmed user here)
+  var params = new URLSearchParams(window.location.search);
+  if (params.get("step") === "confirm" && params.get("email")) {
+    showConfirmStep(params.get("email"));
+  }
+
+  /* ---- Step 1: register ---- */
+  var registerForm = document.getElementById("registerForm");
+  var registerBtn = document.getElementById("registerBtn");
+  var registerBtnText = document.getElementById("registerBtnText");
+  var matchError = document.getElementById("matchError");
+
+  registerForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    var email = document.getElementById("regEmail").value.trim();
+    var password = document.getElementById("regPassword").value;
+    var confirmPassword = document.getElementById("regPasswordConfirm").value;
+
+    matchError.classList.remove("is-visible");
+
+    if (password !== confirmPassword) {
+      matchError.classList.add("is-visible");
+      return;
+    }
+    if (password.length < 8) {
+      toast("Password must be at least 8 characters.");
+      return;
+    }
+
+    registerBtn.disabled = true;
+    registerBtnText.innerHTML = '<span class="spinner"></span>';
+
+    try {
+      await authSignUp(email, password);
+      toast("Account created — check your email for a code.", "success");
+      showConfirmStep(email);
+    } catch (err) {
+      console.error(err);
+      var msg = err.message || "Sign up failed.";
+      if (msg.indexOf("UsernameExistsException") !== -1) {
+        toast("An account with that email already exists.");
+      } else {
+        toast(msg);
+      }
+    } finally {
+      registerBtn.disabled = false;
+      registerBtnText.textContent = "Create account";
+    }
+  });
+
+  /* ---- Step 2: confirm ---- */
+  var confirmForm = document.getElementById("confirmForm");
+  var confirmBtn = document.getElementById("confirmBtn");
+  var confirmBtnText = document.getElementById("confirmBtnText");
+  var resendBtn = document.getElementById("resendBtn");
+
+  confirmForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    var code = document.getElementById("confirmCode").value.trim();
+    if (!code) { toast("Enter the code from your email."); return; }
+
+    confirmBtn.disabled = true;
+    confirmBtnText.innerHTML = '<span class="spinner"></span>';
+
+    try {
+      await authConfirmSignUp(pendingEmail, code);
+      toast("Email confirmed. Redirecting to login…", "success");
+      setTimeout(function () { window.location.href = "login.html"; }, 1200);
+    } catch (err) {
+      console.error(err);
+      toast(err.message || "Could not confirm that code.");
+      confirmBtn.disabled = false;
+      confirmBtnText.textContent = "Confirm & continue";
+    }
+  });
+
+  resendBtn.addEventListener("click", async function () {
+    resendBtn.disabled = true;
+    try {
+      await authResendCode(pendingEmail);
+      toast("Code resent.", "success");
+    } catch (err) {
+      toast(err.message || "Could not resend the code.");
+    } finally {
+      resendBtn.disabled = false;
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

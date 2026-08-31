@@ -1,0 +1,2314 @@
+{
+ "Resources": {
+  "GalleryUserPool56518342": {
+   "Type": "AWS::Cognito::UserPool",
+   "Properties": {
+    "AccountRecoverySetting": {
+     "RecoveryMechanisms": [
+      {
+       "Name": "verified_email",
+       "Priority": 1
+      }
+     ]
+    },
+    "AdminCreateUserConfig": {
+     "AllowAdminCreateUserOnly": false
+    },
+    "AutoVerifiedAttributes": [
+     "email"
+    ],
+    "EmailVerificationMessage": "The verification code to your new account is {####}",
+    "EmailVerificationSubject": "Verify your new account",
+    "Policies": {
+     "PasswordPolicy": {
+      "MinimumLength": 8,
+      "RequireLowercase": true,
+      "RequireNumbers": true,
+      "RequireSymbols": false,
+      "RequireUppercase": false
+     }
+    },
+    "Schema": [
+     {
+      "Mutable": true,
+      "Name": "email",
+      "Required": true
+     }
+    ],
+    "SmsVerificationMessage": "The verification code to your new account is {####}",
+    "UserPoolName": "image-gallery-users",
+    "UsernameAttributes": [
+     "email"
+    ],
+    "VerificationMessageTemplate": {
+     "DefaultEmailOption": "CONFIRM_WITH_CODE",
+     "EmailMessage": "The verification code to your new account is {####}",
+     "EmailSubject": "Verify your new account",
+     "SmsMessage": "The verification code to your new account is {####}"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/GalleryUserPool/Resource"
+   }
+  },
+  "GalleryUserPoolClientE6B3836F": {
+   "Type": "AWS::Cognito::UserPoolClient",
+   "Properties": {
+    "AccessTokenValidity": 60,
+    "AllowedOAuthFlows": [
+     "implicit",
+     "code"
+    ],
+    "AllowedOAuthFlowsUserPoolClient": true,
+    "AllowedOAuthScopes": [
+     "profile",
+     "phone",
+     "email",
+     "openid",
+     "aws.cognito.signin.user.admin"
+    ],
+    "CallbackURLs": [
+     "https://example.com"
+    ],
+    "ExplicitAuthFlows": [
+     "ALLOW_USER_PASSWORD_AUTH",
+     "ALLOW_REFRESH_TOKEN_AUTH"
+    ],
+    "GenerateSecret": false,
+    "IdTokenValidity": 60,
+    "RefreshTokenValidity": 43200,
+    "SupportedIdentityProviders": [
+     "COGNITO"
+    ],
+    "TokenValidityUnits": {
+     "AccessToken": "minutes",
+     "IdToken": "minutes",
+     "RefreshToken": "minutes"
+    },
+    "UserPoolId": {
+     "Ref": "GalleryUserPool56518342"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/GalleryUserPoolClient/Resource"
+   }
+  },
+  "ImageGalleryBucketAF87B9DD": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "AES256"
+       }
+      }
+     ]
+    },
+    "CorsConfiguration": {
+     "CorsRules": [
+      {
+       "AllowedHeaders": [
+        "*"
+       ],
+       "AllowedMethods": [
+        "GET",
+        "PUT",
+        "DELETE"
+       ],
+       "AllowedOrigins": [
+        "*"
+       ],
+       "ExposedHeaders": [
+        "ETag"
+       ],
+       "MaxAge": 3000
+      }
+     ]
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    },
+    "Tags": [
+     {
+      "Key": "aws-cdk:auto-delete-objects",
+      "Value": "true"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryBucket/Resource"
+   }
+  },
+  "ImageGalleryBucketPolicy731586B0": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "ImageGalleryBucketAF87B9DD"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:PutBucketPolicy"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::GetAtt": [
+          "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+          "Arn"
+         ]
+        }
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ImageGalleryBucketAF87B9DD",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ImageGalleryBucketAF87B9DD",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryBucket/Policy/Resource"
+   }
+  },
+  "ImageGalleryBucketAutoDeleteObjectsCustomResourceCF64A18A": {
+   "Type": "Custom::S3AutoDeleteObjects",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+      "Arn"
+     ]
+    },
+    "BucketName": {
+     "Ref": "ImageGalleryBucketAF87B9DD"
+    }
+   },
+   "DependsOn": [
+    "ImageGalleryBucketPolicy731586B0"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryBucket/AutoDeleteObjectsCustomResource/Default"
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role"
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-176150914525-us-east-1",
+     "S3Key": "faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs24.x",
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       "Lambda function for auto-deleting objects in ",
+       {
+        "Ref": "ImageGalleryBucketAF87B9DD"
+       },
+       " S3 bucket."
+      ]
+     ]
+    }
+   },
+   "DependsOn": [
+    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
+    "aws:asset:path": "asset.faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6",
+    "aws:asset:property": "Code"
+   }
+  },
+  "ImageVaultTableF5A78358": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "id",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "ownerId",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "createdAt",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "visibility",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "GlobalSecondaryIndexes": [
+     {
+      "IndexName": "OwnerIndex",
+      "KeySchema": [
+       {
+        "AttributeName": "ownerId",
+        "KeyType": "HASH"
+       },
+       {
+        "AttributeName": "createdAt",
+        "KeyType": "RANGE"
+       }
+      ],
+      "Projection": {
+       "ProjectionType": "ALL"
+      }
+     },
+     {
+      "IndexName": "VisibilityIndex",
+      "KeySchema": [
+       {
+        "AttributeName": "visibility",
+        "KeyType": "HASH"
+       },
+       {
+        "AttributeName": "createdAt",
+        "KeyType": "RANGE"
+       }
+      ],
+      "Projection": {
+       "ProjectionType": "ALL"
+      }
+     }
+    ],
+    "KeySchema": [
+     {
+      "AttributeName": "id",
+      "KeyType": "HASH"
+     }
+    ],
+    "PointInTimeRecoverySpecification": {
+     "PointInTimeRecoveryEnabled": false
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageVaultTable/Resource"
+   }
+  },
+  "CreateUploadUrlFunctionServiceRole9507D8E1": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/CreateUploadUrlFunction/ServiceRole/Resource"
+   }
+  },
+  "CreateUploadUrlFunctionServiceRoleDefaultPolicy5C80B33A": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:Abort*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "ImageGalleryBucketAF87B9DD",
+            "Arn"
+           ]
+          },
+          "/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CreateUploadUrlFunctionServiceRoleDefaultPolicy5C80B33A",
+    "Roles": [
+     {
+      "Ref": "CreateUploadUrlFunctionServiceRole9507D8E1"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/CreateUploadUrlFunction/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "CreateUploadUrlFunctionEEFDA379": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-176150914525-us-east-1",
+     "S3Key": "4eecc8fe7d539150fd3ffa783fd6c8762aedeca8807a6613a16974f5320ed880.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "BUCKET_NAME": {
+       "Ref": "ImageGalleryBucketAF87B9DD"
+      },
+      "TABLE_NAME": {
+       "Ref": "ImageVaultTableF5A78358"
+      }
+     }
+    },
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "CreateUploadUrlFunctionServiceRole9507D8E1",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs22.x",
+    "Timeout": 10
+   },
+   "DependsOn": [
+    "CreateUploadUrlFunctionServiceRoleDefaultPolicy5C80B33A",
+    "CreateUploadUrlFunctionServiceRole9507D8E1"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/CreateUploadUrlFunction/Resource",
+    "aws:asset:path": "asset.4eecc8fe7d539150fd3ffa783fd6c8762aedeca8807a6613a16974f5320ed880",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "CompleteUploadFunctionServiceRoleFCDBAB0C": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/CompleteUploadFunction/ServiceRole/Resource"
+   }
+  },
+  "CompleteUploadFunctionServiceRoleDefaultPolicyAC303504": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchWriteItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ImageVaultTableF5A78358",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ImageVaultTableF5A78358",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CompleteUploadFunctionServiceRoleDefaultPolicyAC303504",
+    "Roles": [
+     {
+      "Ref": "CompleteUploadFunctionServiceRoleFCDBAB0C"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/CompleteUploadFunction/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "CompleteUploadFunction353D2749": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-176150914525-us-east-1",
+     "S3Key": "6dd6deed87c69226022fa3c28dbd52b4e5601ebe8ac66079b5ee48c4be7c7a28.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "BUCKET_NAME": {
+       "Ref": "ImageGalleryBucketAF87B9DD"
+      },
+      "TABLE_NAME": {
+       "Ref": "ImageVaultTableF5A78358"
+      }
+     }
+    },
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "CompleteUploadFunctionServiceRoleFCDBAB0C",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs22.x",
+    "Timeout": 10
+   },
+   "DependsOn": [
+    "CompleteUploadFunctionServiceRoleDefaultPolicyAC303504",
+    "CompleteUploadFunctionServiceRoleFCDBAB0C"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/CompleteUploadFunction/Resource",
+    "aws:asset:path": "asset.6dd6deed87c69226022fa3c28dbd52b4e5601ebe8ac66079b5ee48c4be7c7a28",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ListPublicImagesFunctionServiceRole5677FA23": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ListPublicImagesFunction/ServiceRole/Resource"
+   }
+  },
+  "ListPublicImagesFunctionServiceRoleDefaultPolicyEC80DC12": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ImageGalleryBucketAF87B9DD",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ImageGalleryBucketAF87B9DD",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:Query",
+        "dynamodb:Scan"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ImageVaultTableF5A78358",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ImageVaultTableF5A78358",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ListPublicImagesFunctionServiceRoleDefaultPolicyEC80DC12",
+    "Roles": [
+     {
+      "Ref": "ListPublicImagesFunctionServiceRole5677FA23"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ListPublicImagesFunction/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ListPublicImagesFunctionC561E5D8": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-176150914525-us-east-1",
+     "S3Key": "a91cccfb73fc5664702286028f702c052bca602dcc720ae98173729f17d62493.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "BUCKET_NAME": {
+       "Ref": "ImageGalleryBucketAF87B9DD"
+      },
+      "TABLE_NAME": {
+       "Ref": "ImageVaultTableF5A78358"
+      }
+     }
+    },
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "ListPublicImagesFunctionServiceRole5677FA23",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs22.x",
+    "Timeout": 10
+   },
+   "DependsOn": [
+    "ListPublicImagesFunctionServiceRoleDefaultPolicyEC80DC12",
+    "ListPublicImagesFunctionServiceRole5677FA23"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ListPublicImagesFunction/Resource",
+    "aws:asset:path": "asset.a91cccfb73fc5664702286028f702c052bca602dcc720ae98173729f17d62493",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ListMyImagesFunctionServiceRole8407CF7D": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ListMyImagesFunction/ServiceRole/Resource"
+   }
+  },
+  "ListMyImagesFunctionServiceRoleDefaultPolicyE76E6714": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ImageGalleryBucketAF87B9DD",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ImageGalleryBucketAF87B9DD",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:Query",
+        "dynamodb:Scan"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ImageVaultTableF5A78358",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ImageVaultTableF5A78358",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ListMyImagesFunctionServiceRoleDefaultPolicyE76E6714",
+    "Roles": [
+     {
+      "Ref": "ListMyImagesFunctionServiceRole8407CF7D"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ListMyImagesFunction/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ListMyImagesFunction18CE2369": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-176150914525-us-east-1",
+     "S3Key": "9133c11599b88b413673319dba535f9155b42b7848fac534033d0ec6325adc0f.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "BUCKET_NAME": {
+       "Ref": "ImageGalleryBucketAF87B9DD"
+      },
+      "TABLE_NAME": {
+       "Ref": "ImageVaultTableF5A78358"
+      }
+     }
+    },
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "ListMyImagesFunctionServiceRole8407CF7D",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs22.x",
+    "Timeout": 10
+   },
+   "DependsOn": [
+    "ListMyImagesFunctionServiceRoleDefaultPolicyE76E6714",
+    "ListMyImagesFunctionServiceRole8407CF7D"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ListMyImagesFunction/Resource",
+    "aws:asset:path": "asset.9133c11599b88b413673319dba535f9155b42b7848fac534033d0ec6325adc0f",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "DeleteImageFunctionServiceRole0B63B483": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/DeleteImageFunction/ServiceRole/Resource"
+   }
+  },
+  "DeleteImageFunctionServiceRoleDefaultPolicy671CB9EA": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:DeleteObject*",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "ImageGalleryBucketAF87B9DD",
+            "Arn"
+           ]
+          },
+          "/*"
+         ]
+        ]
+       }
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ImageVaultTableF5A78358",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ImageVaultTableF5A78358",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "DeleteImageFunctionServiceRoleDefaultPolicy671CB9EA",
+    "Roles": [
+     {
+      "Ref": "DeleteImageFunctionServiceRole0B63B483"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/DeleteImageFunction/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "DeleteImageFunction98837557": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-176150914525-us-east-1",
+     "S3Key": "82ca3a8de0b79b51b2bce7f24e4a8b755e7caf72f3dd124ee7fec8b9d2332efb.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "BUCKET_NAME": {
+       "Ref": "ImageGalleryBucketAF87B9DD"
+      },
+      "TABLE_NAME": {
+       "Ref": "ImageVaultTableF5A78358"
+      }
+     }
+    },
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "DeleteImageFunctionServiceRole0B63B483",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs22.x",
+    "Timeout": 10
+   },
+   "DependsOn": [
+    "DeleteImageFunctionServiceRoleDefaultPolicy671CB9EA",
+    "DeleteImageFunctionServiceRole0B63B483"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/DeleteImageFunction/Resource",
+    "aws:asset:path": "asset.82ca3a8de0b79b51b2bce7f24e4a8b755e7caf72f3dd124ee7fec8b9d2332efb",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ImageGalleryApiC55A94E9": {
+   "Type": "AWS::ApiGateway::RestApi",
+   "Properties": {
+    "Description": "API for uploading, listing, and deleting gallery images",
+    "Name": "Image Gallery Service"
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Resource"
+   }
+  },
+  "ImageGalleryApiCloudWatchRole02F60B3D": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "apigateway.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+       ]
+      ]
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/CloudWatchRole/Resource"
+   }
+  },
+  "ImageGalleryApiAccount9403F6F5": {
+   "Type": "AWS::ApiGateway::Account",
+   "Properties": {
+    "CloudWatchRoleArn": {
+     "Fn::GetAtt": [
+      "ImageGalleryApiCloudWatchRole02F60B3D",
+      "Arn"
+     ]
+    }
+   },
+   "DependsOn": [
+    "ImageGalleryApiC55A94E9"
+   ],
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Account"
+   }
+  },
+  "ImageGalleryApiDeployment28E0C3E6ddc93d3218b4c5a1189a6e2741cc3e1d": {
+   "Type": "AWS::ApiGateway::Deployment",
+   "Properties": {
+    "Description": "API for uploading, listing, and deleting gallery images",
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    }
+   },
+   "DependsOn": [
+    "ImageGalleryApiimagesidcompleteOPTIONS96DA0EFD",
+    "ImageGalleryApiimagesidcompletePOST83EF3CCA",
+    "ImageGalleryApiimagesidcomplete8F20D5AA",
+    "ImageGalleryApiimagesidDELETE82698099",
+    "ImageGalleryApiimagesidOPTIONS4DA13FD0",
+    "ImageGalleryApiimagesid4D291931",
+    "ImageGalleryApiimagesmineGET8DC1FD00",
+    "ImageGalleryApiimagesmineOPTIONS1FFA7E43",
+    "ImageGalleryApiimagesmineECD0A2B8",
+    "ImageGalleryApiimagesOPTIONS0422346A",
+    "ImageGalleryApiimagespublicGETD9CAA05C",
+    "ImageGalleryApiimagespublicOPTIONSAA0A33E7",
+    "ImageGalleryApiimagespublicBBB9F56A",
+    "ImageGalleryApiimages9538547B",
+    "ImageGalleryApiimagesuploadOPTIONS6D7AE7A9",
+    "ImageGalleryApiimagesuploadPOST939D7EA3",
+    "ImageGalleryApiimagesupload8F23ABFF",
+    "ImageGalleryApiOPTIONSA35E04FE",
+    "ImageGalleryApiDefault4xxCors6AC95807",
+    "ImageGalleryApiDefault5xxCors79A27B5A"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Deployment/Resource",
+    "aws:cdk:do-not-refactor": true
+   }
+  },
+  "ImageGalleryApiDeploymentStageprodE7FBB211": {
+   "Type": "AWS::ApiGateway::Stage",
+   "Properties": {
+    "DeploymentId": {
+     "Ref": "ImageGalleryApiDeployment28E0C3E6ddc93d3218b4c5a1189a6e2741cc3e1d"
+    },
+    "MethodSettings": [
+     {
+      "DataTraceEnabled": false,
+      "HttpMethod": "*",
+      "ResourcePath": "/*",
+      "ThrottlingBurstLimit": 20,
+      "ThrottlingRateLimit": 10
+     }
+    ],
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    },
+    "StageName": "prod"
+   },
+   "DependsOn": [
+    "ImageGalleryApiAccount9403F6F5"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/DeploymentStage.prod/Resource"
+   }
+  },
+  "ImageGalleryApiOPTIONSA35E04FE": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Fn::GetAtt": [
+      "ImageGalleryApiC55A94E9",
+      "RootResourceId"
+     ]
+    },
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/OPTIONS/Resource"
+   }
+  },
+  "ImageGalleryApiimages9538547B": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "ImageGalleryApiC55A94E9",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "images",
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/Resource"
+   }
+  },
+  "ImageGalleryApiimagesOPTIONS0422346A": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "ImageGalleryApiimages9538547B"
+    },
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/OPTIONS/Resource"
+   }
+  },
+  "ImageGalleryApiimagesupload8F23ABFF": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "ImageGalleryApiimages9538547B"
+    },
+    "PathPart": "upload",
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/upload/Resource"
+   }
+  },
+  "ImageGalleryApiimagesuploadOPTIONS6D7AE7A9": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "ImageGalleryApiimagesupload8F23ABFF"
+    },
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/upload/OPTIONS/Resource"
+   }
+  },
+  "ImageGalleryApiimagesuploadPOSTApiPermissionImageGalleryIacStackImageGalleryApi073DFF19POSTimagesupload5D3627F7": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "CreateUploadUrlFunctionEEFDA379",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:176150914525:",
+       {
+        "Ref": "ImageGalleryApiC55A94E9"
+       },
+       "/",
+       {
+        "Ref": "ImageGalleryApiDeploymentStageprodE7FBB211"
+       },
+       "/POST/images/upload"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/upload/POST/ApiPermission.ImageGalleryIacStackImageGalleryApi073DFF19.POST..images.upload"
+   }
+  },
+  "ImageGalleryApiimagesuploadPOSTApiPermissionTestImageGalleryIacStackImageGalleryApi073DFF19POSTimagesupload35B9CC1F": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "CreateUploadUrlFunctionEEFDA379",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:176150914525:",
+       {
+        "Ref": "ImageGalleryApiC55A94E9"
+       },
+       "/test-invoke-stage/POST/images/upload"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/upload/POST/ApiPermission.Test.ImageGalleryIacStackImageGalleryApi073DFF19.POST..images.upload"
+   }
+  },
+  "ImageGalleryApiimagesuploadPOST939D7EA3": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": true,
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "GalleryAuthorizerEDB686DA"
+    },
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "CreateUploadUrlFunctionEEFDA379",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "ImageGalleryApiimagesupload8F23ABFF"
+    },
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/upload/POST/Resource"
+   }
+  },
+  "ImageGalleryApiimagespublicBBB9F56A": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "ImageGalleryApiimages9538547B"
+    },
+    "PathPart": "public",
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/public/Resource"
+   }
+  },
+  "ImageGalleryApiimagespublicOPTIONSAA0A33E7": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "ImageGalleryApiimagespublicBBB9F56A"
+    },
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/public/OPTIONS/Resource"
+   }
+  },
+  "ImageGalleryApiimagespublicGETApiPermissionImageGalleryIacStackImageGalleryApi073DFF19GETimagespublicC7D0FC75": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ListPublicImagesFunctionC561E5D8",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:176150914525:",
+       {
+        "Ref": "ImageGalleryApiC55A94E9"
+       },
+       "/",
+       {
+        "Ref": "ImageGalleryApiDeploymentStageprodE7FBB211"
+       },
+       "/GET/images/public"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/public/GET/ApiPermission.ImageGalleryIacStackImageGalleryApi073DFF19.GET..images.public"
+   }
+  },
+  "ImageGalleryApiimagespublicGETApiPermissionTestImageGalleryIacStackImageGalleryApi073DFF19GETimagespublicE9CA6E36": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ListPublicImagesFunctionC561E5D8",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:176150914525:",
+       {
+        "Ref": "ImageGalleryApiC55A94E9"
+       },
+       "/test-invoke-stage/GET/images/public"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/public/GET/ApiPermission.Test.ImageGalleryIacStackImageGalleryApi073DFF19.GET..images.public"
+   }
+  },
+  "ImageGalleryApiimagespublicGETD9CAA05C": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": true,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ListPublicImagesFunctionC561E5D8",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "ImageGalleryApiimagespublicBBB9F56A"
+    },
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/public/GET/Resource"
+   }
+  },
+  "ImageGalleryApiimagesmineECD0A2B8": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "ImageGalleryApiimages9538547B"
+    },
+    "PathPart": "mine",
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/mine/Resource"
+   }
+  },
+  "ImageGalleryApiimagesmineOPTIONS1FFA7E43": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "ImageGalleryApiimagesmineECD0A2B8"
+    },
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/mine/OPTIONS/Resource"
+   }
+  },
+  "ImageGalleryApiimagesmineGETApiPermissionImageGalleryIacStackImageGalleryApi073DFF19GETimagesmineF1C26847": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ListMyImagesFunction18CE2369",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:176150914525:",
+       {
+        "Ref": "ImageGalleryApiC55A94E9"
+       },
+       "/",
+       {
+        "Ref": "ImageGalleryApiDeploymentStageprodE7FBB211"
+       },
+       "/GET/images/mine"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/mine/GET/ApiPermission.ImageGalleryIacStackImageGalleryApi073DFF19.GET..images.mine"
+   }
+  },
+  "ImageGalleryApiimagesmineGETApiPermissionTestImageGalleryIacStackImageGalleryApi073DFF19GETimagesmineABA91284": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ListMyImagesFunction18CE2369",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:176150914525:",
+       {
+        "Ref": "ImageGalleryApiC55A94E9"
+       },
+       "/test-invoke-stage/GET/images/mine"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/mine/GET/ApiPermission.Test.ImageGalleryIacStackImageGalleryApi073DFF19.GET..images.mine"
+   }
+  },
+  "ImageGalleryApiimagesmineGET8DC1FD00": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": true,
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "GalleryAuthorizerEDB686DA"
+    },
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ListMyImagesFunction18CE2369",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "ImageGalleryApiimagesmineECD0A2B8"
+    },
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/mine/GET/Resource"
+   }
+  },
+  "ImageGalleryApiimagesid4D291931": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "ImageGalleryApiimages9538547B"
+    },
+    "PathPart": "{id}",
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/{id}/Resource"
+   }
+  },
+  "ImageGalleryApiimagesidOPTIONS4DA13FD0": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "ImageGalleryApiimagesid4D291931"
+    },
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/{id}/OPTIONS/Resource"
+   }
+  },
+  "ImageGalleryApiimagesidcomplete8F20D5AA": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "ImageGalleryApiimagesid4D291931"
+    },
+    "PathPart": "complete",
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/{id}/complete/Resource"
+   }
+  },
+  "ImageGalleryApiimagesidcompleteOPTIONS96DA0EFD": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "ImageGalleryApiimagesidcomplete8F20D5AA"
+    },
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/{id}/complete/OPTIONS/Resource"
+   }
+  },
+  "ImageGalleryApiimagesidcompletePOSTApiPermissionImageGalleryIacStackImageGalleryApi073DFF19POSTimagesidcompleteFDF691A1": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "CompleteUploadFunction353D2749",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:176150914525:",
+       {
+        "Ref": "ImageGalleryApiC55A94E9"
+       },
+       "/",
+       {
+        "Ref": "ImageGalleryApiDeploymentStageprodE7FBB211"
+       },
+       "/POST/images/*/complete"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/{id}/complete/POST/ApiPermission.ImageGalleryIacStackImageGalleryApi073DFF19.POST..images.{id}.complete"
+   }
+  },
+  "ImageGalleryApiimagesidcompletePOSTApiPermissionTestImageGalleryIacStackImageGalleryApi073DFF19POSTimagesidcomplete4A1EB451": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "CompleteUploadFunction353D2749",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:176150914525:",
+       {
+        "Ref": "ImageGalleryApiC55A94E9"
+       },
+       "/test-invoke-stage/POST/images/*/complete"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/{id}/complete/POST/ApiPermission.Test.ImageGalleryIacStackImageGalleryApi073DFF19.POST..images.{id}.complete"
+   }
+  },
+  "ImageGalleryApiimagesidcompletePOST83EF3CCA": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": true,
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "GalleryAuthorizerEDB686DA"
+    },
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "CompleteUploadFunction353D2749",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "ImageGalleryApiimagesidcomplete8F20D5AA"
+    },
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/{id}/complete/POST/Resource"
+   }
+  },
+  "ImageGalleryApiimagesidDELETEApiPermissionImageGalleryIacStackImageGalleryApi073DFF19DELETEimagesid761C4DA1": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "DeleteImageFunction98837557",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:176150914525:",
+       {
+        "Ref": "ImageGalleryApiC55A94E9"
+       },
+       "/",
+       {
+        "Ref": "ImageGalleryApiDeploymentStageprodE7FBB211"
+       },
+       "/DELETE/images/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/{id}/DELETE/ApiPermission.ImageGalleryIacStackImageGalleryApi073DFF19.DELETE..images.{id}"
+   }
+  },
+  "ImageGalleryApiimagesidDELETEApiPermissionTestImageGalleryIacStackImageGalleryApi073DFF19DELETEimagesidD2225A3B": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "DeleteImageFunction98837557",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:176150914525:",
+       {
+        "Ref": "ImageGalleryApiC55A94E9"
+       },
+       "/test-invoke-stage/DELETE/images/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/{id}/DELETE/ApiPermission.Test.ImageGalleryIacStackImageGalleryApi073DFF19.DELETE..images.{id}"
+   }
+  },
+  "ImageGalleryApiimagesidDELETE82698099": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": true,
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "GalleryAuthorizerEDB686DA"
+    },
+    "HttpMethod": "DELETE",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "DeleteImageFunction98837557",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "ImageGalleryApiimagesid4D291931"
+    },
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default/images/{id}/DELETE/Resource"
+   }
+  },
+  "ImageGalleryApiDefault4xxCors6AC95807": {
+   "Type": "AWS::ApiGateway::GatewayResponse",
+   "Properties": {
+    "ResponseParameters": {
+     "gatewayresponse.header.Access-Control-Allow-Origin": "'*'",
+     "gatewayresponse.header.Access-Control-Allow-Headers": "'*'"
+    },
+    "ResponseType": "DEFAULT_4XX",
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default4xxCors/Resource"
+   }
+  },
+  "ImageGalleryApiDefault5xxCors79A27B5A": {
+   "Type": "AWS::ApiGateway::GatewayResponse",
+   "Properties": {
+    "ResponseParameters": {
+     "gatewayresponse.header.Access-Control-Allow-Origin": "'*'",
+     "gatewayresponse.header.Access-Control-Allow-Headers": "'*'"
+    },
+    "ResponseType": "DEFAULT_5XX",
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/Default5xxCors/Resource"
+   }
+  },
+  "ImageGalleryApiClientApiKeyB12C733F": {
+   "Type": "AWS::ApiGateway::ApiKey",
+   "Properties": {
+    "Enabled": true,
+    "StageKeys": [
+     {
+      "RestApiId": {
+       "Ref": "ImageGalleryApiC55A94E9"
+      },
+      "StageName": {
+       "Ref": "ImageGalleryApiDeploymentStageprodE7FBB211"
+      }
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/ClientApiKey/Resource"
+   }
+  },
+  "ImageGalleryApiUsagePlan600226D2": {
+   "Type": "AWS::ApiGateway::UsagePlan",
+   "Properties": {
+    "ApiStages": [
+     {
+      "ApiId": {
+       "Ref": "ImageGalleryApiC55A94E9"
+      },
+      "Stage": {
+       "Ref": "ImageGalleryApiDeploymentStageprodE7FBB211"
+      },
+      "Throttle": {}
+     }
+    ],
+    "Quota": {
+     "Limit": 10000,
+     "Period": "MONTH"
+    },
+    "Throttle": {
+     "BurstLimit": 20,
+     "RateLimit": 10
+    },
+    "UsagePlanName": "StandardUsagePlan"
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/UsagePlan/Resource"
+   }
+  },
+  "ImageGalleryApiUsagePlanUsagePlanKeyResourceImageGalleryIacStackImageGalleryApiClientApiKey9E171F9FC2B78BFB": {
+   "Type": "AWS::ApiGateway::UsagePlanKey",
+   "Properties": {
+    "KeyId": {
+     "Ref": "ImageGalleryApiClientApiKeyB12C733F"
+    },
+    "KeyType": "API_KEY",
+    "UsagePlanId": {
+     "Ref": "ImageGalleryApiUsagePlan600226D2"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/ImageGalleryApi/UsagePlan/UsagePlanKeyResource:ImageGalleryIacStackImageGalleryApiClientApiKey9E171F9F"
+   }
+  },
+  "GalleryAuthorizerEDB686DA": {
+   "Type": "AWS::ApiGateway::Authorizer",
+   "Properties": {
+    "IdentitySource": "method.request.header.Authorization",
+    "Name": "ImageGalleryIacStackGalleryAuthorizer86EA34C0",
+    "ProviderARNs": [
+     {
+      "Fn::GetAtt": [
+       "GalleryUserPool56518342",
+       "Arn"
+      ]
+     }
+    ],
+    "RestApiId": {
+     "Ref": "ImageGalleryApiC55A94E9"
+    },
+    "Type": "COGNITO_USER_POOLS"
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/GalleryAuthorizer/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/5VSTW/bMAz9Lc1Z0bp02IDd3BTbYdgaOOtpGAJZZl0mkmiYVLPM8H8fLDkfLXrZiY964nukxIVefPykr6/Mnue23s0dVrpfi7E7Zfa86S01AYV0/8DQrYicWj6GEz6CpUMIcknlk0Hxje5vo91BYjP61c88/sEw+zy7tB39+EYninW+WkShO3AgcF9twQrPht8qUytyaA9n1Zz/h3YuWIsR8BAupW8Nw6DqQzCe6kr3P03lYHRKYFDO+Ko2m0A1bFn/SOFLDFaQgkLjdV9SLkjx3GlG46tsDDMI62IMk6Dul4/hpDNeh84jM1IYlGmxMQJ7c9B9CSxFi8ngDAtrKQZRd9A6OvjpQy6ytZgmdZVBCUyxszBOq76DPFE9khM6spNJxl9zByVwS4ET9/qoaPEbpGEn9MCmgZUzIa/HW0kqyIt23B8uojxRh3+hS1qnbBjUMrKQf7PBl9Sqo2esoUsTppceJ8fQvJjuPkobZVDjd+otv3tefNDvF/r6asuI8y4GQQ+6zPEflWJ0aTADAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "ImageGalleryIacStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "ImageGalleryApiEndpoint826CA48C": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "ImageGalleryApiC55A94E9"
+      },
+      ".execute-api.us-east-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "ImageGalleryApiDeploymentStageprodE7FBB211"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "ApiUrl": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "ImageGalleryApiC55A94E9"
+      },
+      ".execute-api.us-east-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "ImageGalleryApiDeploymentStageprodE7FBB211"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "ApiKeyId": {
+   "Value": {
+    "Ref": "ImageGalleryApiClientApiKeyB12C733F"
+   }
+  },
+  "BucketName": {
+   "Value": {
+    "Ref": "ImageGalleryBucketAF87B9DD"
+   }
+  },
+  "TableName": {
+   "Value": {
+    "Ref": "ImageVaultTableF5A78358"
+   }
+  },
+  "UserPoolId": {
+   "Value": {
+    "Ref": "GalleryUserPool56518342"
+   }
+  },
+  "UserPoolClientId": {
+   "Value": {
+    "Ref": "GalleryUserPoolClientE6B3836F"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Upload Image &mdash; Vault</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/styles.css" />
+
+<style>
+  .uploader { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 0; background: var(--white); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); overflow: hidden; border: 1px solid var(--line); margin-top: 24px; }
+  @media (max-width: 860px) { .uploader { grid-template-columns: 1fr; } }
+
+  .dropzone { position: relative; padding: 34px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: 320px; border-right: 1px solid var(--line); background: var(--mist); transition: background 0.25s var(--ease); }
+  @media (max-width: 860px) { .dropzone { border-right: none; border-bottom: 1px solid var(--line); min-height: 240px; padding: 26px; } }
+  @media (max-width: 560px) { .upload-form { padding: 22px 20px; } .dropzone { padding: 20px; min-height: 200px; } }
+
+  .dropzone__border { position: absolute; inset: 12px; border-radius: var(--radius-md); border: 1.5px dashed var(--slate-pale); pointer-events: none; transition: border-color 0.25s var(--ease); }
+  .dropzone.is-dragover { background: var(--sky-pale); }
+  .dropzone.is-dragover .dropzone__border {
+    border-color: var(--blue); border-style: solid;
+    background-image: repeating-linear-gradient(90deg, var(--blue) 0 14px, transparent 14px 24px);
+    background-size: 200% 2px; background-repeat: no-repeat;
+    background-position: 0 0, 0 100%, 0 0, 100% 0;
+    animation: conveyor 1.1s linear infinite;
+  }
+  @keyframes conveyor { from { background-position-x: 0; } to { background-position-x: -48px; } }
+
+  .dropzone__icon { width: 56px; height: 56px; border-radius: 16px; background: var(--white); box-shadow: var(--shadow-sm); display: grid; place-items: center; margin-bottom: 18px; color: var(--blue); transition: transform 0.3s var(--ease); }
+  .dropzone.is-dragover .dropzone__icon { transform: translateY(-4px) scale(1.05); }
+  .dropzone__icon svg { width: 26px; height: 26px; }
+  .dropzone h3 { font-family: var(--font-display); font-size: 17px; margin: 0 0 6px; z-index: 1; }
+  .dropzone p { font-size: 13.5px; color: var(--slate); margin: 0 0 18px; z-index: 1; }
+  .dropzone__browse { z-index: 1; background: var(--ink); color: var(--white); padding: 10px 20px; border-radius: var(--radius-pill); font-size: 13.5px; font-weight: 600; transition: transform 0.2s var(--ease), background 0.2s var(--ease); }
+  .dropzone__browse:hover { background: var(--blue-deep); transform: translateY(-1px); }
+  .dropzone__hint { z-index: 1; margin-top: 14px; font-family: var(--font-mono); font-size: 11px; color: var(--slate-pale); }
+  .dropzone__input { display: none; }
+  .dropzone__preview { position: relative; z-index: 1; width: 100%; max-width: 220px; }
+  .dropzone__preview img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: var(--radius-md); box-shadow: var(--shadow-md); }
+  .dropzone__preview-name { margin-top: 10px; font-size: 12.5px; font-family: var(--font-mono); color: var(--slate); word-break: break-all; }
+  .dropzone__clear { position: absolute; top: -10px; right: -10px; width: 28px; height: 28px; border-radius: 50%; background: var(--ink); color: var(--white); display: grid; place-items: center; box-shadow: var(--shadow-md); transition: background 0.2s var(--ease); }
+  .dropzone__clear:hover { background: var(--danger); }
+
+  .upload-form { padding: 30px 34px; display: flex; flex-direction: column; gap: 16px; }
+  .field__count { text-align: right; font-family: var(--font-mono); font-size: 11px; color: var(--slate-pale); margin-top: 4px; }
+  .upload-form__actions { margin-top: 6px; display: flex; align-items: center; gap: 14px; }
+
+  .progress { height: 6px; border-radius: var(--radius-pill); background: var(--mist-deep); overflow: hidden; display: none; }
+  .progress.is-active { display: block; }
+  .progress__bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--blue), var(--sky)); border-radius: var(--radius-pill); transition: width 0.3s var(--ease); }
+  .progress__label { font-family: var(--font-mono); font-size: 11px; color: var(--slate); margin-top: 6px; display: none; }
+  .progress__label.is-active { display: block; }
+</style>
+</head>
+<body>
+
+<div class="config-banner" id="configBanner">
+  <div class="shell">⚠️ This app isn't fully configured yet — check the setup instructions.</div>
+</div>
+
+<header class="topbar">
+  <div class="shell topbar__inner">
+    <div class="brand">
+      <span class="brand__mark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg></span>
+      Vault
+    </div>
+
+    <div class="topbar__nav">
+      <a href="index.html" class="topbar__link">My Gallery</a>
+      <a href="public.html" class="topbar__link">Public Gallery</a>
+      <div class="user-badge" id="userBadge" style="display:none;">
+        <span class="user-badge__avatar" id="userAvatar"></span>
+        <span class="user-badge__email" id="userEmail"></span>
+        <button class="user-badge__logout" id="logoutBtn">Log out</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="shell">
+    <a href="index.html" class="btn btn-ghost" style="margin-bottom: 16px; display: inline-flex; align-items: center; gap: 6px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px; height:16px;"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back to Gallery
+    </a>
+    <h1>Upload <span>New Image</span></h1>
+    <p class="lede">Select an image to add to your storage. You can keep it private or share it publicly.</p>
+
+    <form class="uploader" id="uploadForm" novalidate>
+      <div class="dropzone" id="dropzone">
+        <div class="dropzone__border"></div>
+        <div id="dropzoneEmpty">
+          <div class="dropzone__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></div>
+          <h3>Drag an image here</h3>
+          <p>or choose a file from your device</p>
+          <label class="dropzone__browse" for="fileInput">Browse files</label>
+          <input class="dropzone__input" type="file" id="fileInput" accept="image/*" />
+          <div class="dropzone__hint">JPG &middot; PNG &middot; GIF &middot; WEBP &nbsp;&middot;&nbsp; up to 8&nbsp;MB</div>
+        </div>
+        <div id="dropzonePreview" class="dropzone__preview" style="display:none;">
+          <button type="button" class="dropzone__clear" id="clearPreview" aria-label="Remove selected image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+          <img id="previewImg" src="" alt="Selected image preview" />
+          <div class="dropzone__preview-name" id="previewName"></div>
+        </div>
+      </div>
+
+      <div class="upload-form">
+        <div class="field">
+          <label for="imageName">Name</label>
+          <input type="text" id="imageName" placeholder="e.g. Sunset over Buea" maxlength="80" autocomplete="off" />
+        </div>
+
+        <div class="field">
+          <label for="imageDescription">Description</label>
+          <textarea id="imageDescription" placeholder="What's in this image, and why it matters..." maxlength="280"></textarea>
+          <div class="field__count"><span id="descCount">0</span>/280</div>
+        </div>
+
+        <div class="field">
+          <label>Visibility</label>
+          <div class="visibility-toggle" id="visibilityToggle">
+            <button type="button" class="is-active priv" data-value="private">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Private &mdash; only me
+            </button>
+            <button type="button" class="pub" data-value="public">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg>
+              Public &mdash; everyone
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div class="progress" id="progressBar"><div class="progress__bar" id="progressFill"></div></div>
+          <div class="progress__label" id="progressLabel">Uploading&hellip;</div>
+        </div>
+
+        <div class="upload-form__actions">
+          <button type="submit" class="btn btn-primary" id="submitBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+            Upload image
+          </button>
+          <a href="index.html" class="btn btn-ghost">Cancel</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<footer class="footer">
+  <div class="shell footer__inner">
+    <span>&copy; <span id="footerYear"></span> Vault</span>
+  </div>
+</footer>
+
+<script src="assets/auth.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const CONFIG = {
+    API_URL: "https://1bpnhk3ude.execute-api.us-east-1.amazonaws.com/prod",
+    API_KEY: "iM3raS710o1YS6KXP2NzMaftupN9Olwva8SMbZvV",
+  };
+
+  const isConfigured =
+    !CONFIG.API_URL.includes("YOUR_API_ID") &&
+    !CONFIG.API_KEY.includes("YOUR_API_KEY_VALUE") &&
+    !AUTH_CONFIG.REGION.includes("YOUR_REGION") &&
+    !AUTH_CONFIG.USER_POOL_CLIENT_ID.includes("YOUR_USER_POOL");
+
+  if (!isConfigured) document.getElementById("configBanner").classList.add("is-visible");
+
+  document.getElementById("footerYear").textContent = String(new Date().getFullYear());
+
+  const state = { selectedFile: null, uploadVisibility: "private" };
+  const MAX_FILE_BYTES = 8 * 1024 * 1024;
+
+  const el = {};
+  ["userBadge","userAvatar","userEmail","logoutBtn",
+   "uploadForm","dropzone","fileInput","dropzoneEmpty","dropzonePreview","previewImg","previewName","clearPreview",
+   "imageName","imageDescription","descCount","visibilityToggle","progressBar","progressFill","progressLabel",
+   "submitBtn","toastStack"
+  ].forEach(function (id) { el[id] = document.getElementById(id); });
+
+  requireAuth().then(function (user) {
+    if (!user) return;
+    var email = user.email || "";
+    el.userEmail.textContent = email;
+    el.userAvatar.textContent = email.charAt(0).toUpperCase() || "?";
+    el.userBadge.style.display = "flex";
+  });
+
+  el.logoutBtn.addEventListener("click", function () {
+    authLogout();
+    window.location.href = "login.html";
+  });
+
+  const ICONS = {
+    success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>',
+    error: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>',
+    info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16v-4M12 8h.01"/></svg>',
+  };
+
+  function toast(message, type) {
+    type = type || "info";
+    var node = document.createElement("div");
+    node.className = "toast " + type;
+    node.innerHTML = '<span class="toast__icon">' + ICONS[type] + '</span><span class="toast__msg"></span>';
+    node.querySelector(".toast__msg").textContent = message;
+    el.toastStack.appendChild(node);
+    setTimeout(function () {
+      node.classList.add("is-leaving");
+      setTimeout(function () { node.remove(); }, 260);
+    }, 4200);
+  }
+
+  function api(path, options) { return authFetch(CONFIG.API_URL, CONFIG.API_KEY, path, options); }
+
+  el.visibilityToggle.addEventListener("click", function (e) {
+    var btn = e.target.closest("button");
+    if (!btn) return;
+    state.uploadVisibility = btn.dataset.value;
+    el.visibilityToggle.querySelectorAll("button").forEach(function (b) { b.classList.remove("is-active"); });
+    btn.classList.add("is-active");
+  });
+
+  function setUploading(isUploading, pct, label) {
+    el.submitBtn.disabled = isUploading;
+    el.submitBtn.innerHTML = isUploading
+      ? '<span class="spinner"></span> Uploading&hellip;'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg> Upload image';
+    el.progressBar.classList.toggle("is-active", isUploading);
+    el.progressLabel.classList.toggle("is-active", isUploading);
+    if (typeof pct === "number") el.progressFill.style.width = pct + "%";
+    if (label) el.progressLabel.textContent = label;
+  }
+
+  async function uploadToS3(uploadUrl, file) {
+    let response;
+    try {
+      response = await fetch(uploadUrl, { method: "PUT", headers: { "Content-Type": file.type }, body: file });
+    } catch (networkError) {
+      console.error("Network/CORS error uploading to S3:", networkError);
+      throw new Error("Could not reach S3 (network or CORS error). Check the bucket's CORS configuration.");
+    }
+    if (!response.ok) throw new Error("S3 upload failed with status " + response.status + ".");
+  }
+
+  async function handleUploadSubmit(evt) {
+    evt.preventDefault();
+    if (!isConfigured) { toast("Set API_URL/API_KEY and Cognito config before uploading.", "error"); return; }
+
+    const file = state.selectedFile;
+    const name = el.imageName.value.trim();
+    const description = el.imageDescription.value.trim();
+
+    if (!file) { toast("Choose an image first.", "error"); return; }
+    if (!name) { toast("Give the image a name.", "error"); el.imageName.focus(); return; }
+    if (!description) { toast("Add a short description.", "error"); el.imageDescription.focus(); return; }
+
+    try {
+      setUploading(true, 10, "Requesting upload URL…");
+      const { id, key, uploadUrl } = await api("/images/upload", { method: "POST", body: { fileName: file.name, contentType: file.type } });
+
+      setUploading(true, 45, "Uploading to storage…");
+      await uploadToS3(uploadUrl, file);
+
+      setUploading(true, 80, "Saving details…");
+      await api("/images/" + id + "/complete", { method: "POST", body: { name, description, key, visibility: state.uploadVisibility } });
+
+      setUploading(true, 100, "Done! Redirecting to gallery...");
+      toast("Image uploaded successfully! Redirecting...", "success");
+
+      setTimeout(function () {
+        window.location.href = "index.html";
+      }, 1200);
+    } catch (err) {
+      console.error(err);
+      toast(err.message || "Upload failed.", "error");
+      setUploading(false);
+    }
+  }
+
+  function resetUploadForm() {
+    el.uploadForm.reset();
+    state.selectedFile = null;
+    state.uploadVisibility = "private";
+    el.visibilityToggle.querySelectorAll("button").forEach(function (b) { b.classList.remove("is-active"); });
+    el.visibilityToggle.querySelector('[data-value="private"]').classList.add("is-active");
+    el.dropzoneEmpty.style.display = "";
+    el.dropzonePreview.style.display = "none";
+    el.descCount.textContent = "0";
+    el.progressFill.style.width = "0%";
+  }
+
+  function acceptFile(file) {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) { toast("Please choose an image file.", "error"); return; }
+    if (file.size > MAX_FILE_BYTES) { toast("That file is over the 8 MB limit.", "error"); return; }
+
+    state.selectedFile = file;
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      el.previewImg.src = e.target.result;
+      el.previewName.textContent = file.name + "  ·  " + formatBytes(file.size);
+      el.dropzoneEmpty.style.display = "none";
+      el.dropzonePreview.style.display = "";
+    };
+    reader.readAsDataURL(file);
+    if (!el.imageName.value) el.imageName.value = file.name.replace(/\.[^/.]+$/, "");
+  }
+
+  function formatBytes(bytes) {
+    if (bytes < 1024) return bytes + " B";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+  }
+
+  el.fileInput.addEventListener("change", function (e) { acceptFile(e.target.files[0]); });
+  ["dragenter", "dragover"].forEach(function (evtName) {
+    el.dropzone.addEventListener(evtName, function (e) { e.preventDefault(); e.stopPropagation(); el.dropzone.classList.add("is-dragover"); });
+  });
+  ["dragleave", "drop"].forEach(function (evtName) {
+    el.dropzone.addEventListener(evtName, function (e) {
+      e.preventDefault(); e.stopPropagation();
+      if (evtName === "drop" && e.dataTransfer.files.length) acceptFile(e.dataTransfer.files[0]);
+      el.dropzone.classList.remove("is-dragover");
+    });
+  });
+  el.clearPreview.addEventListener("click", resetUploadForm);
+  el.imageDescription.addEventListener("input", function () { el.descCount.textContent = String(el.imageDescription.value.length); });
+  el.uploadForm.addEventListener("submit", handleUploadSubmit);
+
+})();
+</script>
+
+</body>
+</html>

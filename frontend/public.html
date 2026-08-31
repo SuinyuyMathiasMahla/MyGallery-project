@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Public Gallery &mdash; Vault</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+
+<div class="config-banner" id="configBanner">
+  <div class="shell">⚠️ This app isn't fully configured yet — check the setup instructions.</div>
+</div>
+
+<header class="topbar">
+  <div class="shell topbar__inner">
+    <div class="brand">
+      <span class="brand__mark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg></span>
+      Vault
+    </div>
+
+    <div class="topbar__nav">
+      <a href="public.html" class="topbar__link is-active">Public Gallery</a>
+      <span class="topbar__stats"><strong id="statCount">0</strong> public images</span>
+      <a href="index.html" class="topbar__link">Back to Dashboard</a>
+
+      <!-- Shown only if a valid session exists -->
+      <div class="user-badge" id="userBadge" style="display:none;">
+        <span class="user-badge__avatar" id="userAvatar"></span>
+        <a href="index.html" class="user-badge__email" style="text-decoration:none;" id="userEmail"></a>
+        <button class="user-badge__logout" id="logoutBtn">Log out</button>
+      </div>
+
+      <!-- Shown only if logged out -->
+      <div id="guestLinks" style="display:none; gap:14px; align-items:center;">
+        <a href="login.html" class="topbar__link">Log in</a>
+        <a href="signup.html" class="btn btn-primary" style="padding:8px 18px; font-size:13px;">Sign up</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="shell">
+    <p class="hero__eyebrow">Community gallery</p>
+    <h1>Images the <span>community chose to share.</span></h1>
+    <p class="lede">Anyone can browse this gallery. Log in to upload your own and choose what's public.</p>
+  </div>
+</section>
+
+<section class="gallery-section">
+  <div class="shell">
+    <div class="gallery-header">
+      <div>
+        <h2>Public images</h2>
+        <p class="sub" id="gallerySub">Everything the community has marked public.</p>
+      </div>
+      <div class="gallery-controls">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input type="text" id="searchInput" placeholder="Search public images" />
+        </div>
+        <select class="sort-select" id="sortSelect">
+          <option value="newest">Newest first</option>
+          <option value="oldest">Oldest first</option>
+          <option value="name-asc">Name A&ndash;Z</option>
+          <option value="name-desc">Name Z&ndash;A</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </div>
+</section>
+
+<div class="modal-overlay" id="detailOverlay">
+  <div class="modal" role="dialog" aria-modal="true">
+    <img class="modal__image" id="detailImage" src="" alt="" />
+    <div class="modal__body">
+      <div class="modal__top">
+        <div>
+          <h3 id="detailTitle"></h3>
+          <div class="modal__meta" id="detailMeta"></div>
+        </div>
+        <button class="modal__close" id="detailClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      </div>
+      <p class="desc" id="detailDesc"></p>
+      <div class="modal__actions">
+        <a class="btn btn-ghost" id="detailOpenBtn" href="#" target="_blank" rel="noopener">Open original</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<footer class="footer">
+  <div class="shell footer__inner">
+    <span>&copy; <span id="footerYear"></span> Vault</span>
+  </div>
+</footer>
+
+<script src="assets/auth.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const CONFIG = {
+    API_URL: "https://1bpnhk3ude.execute-api.us-east-1.amazonaws.com/prod",
+    API_KEY: "iM3raS710o1YS6KXP2NzMaftupN9Olwva8SMbZvV",
+  };
+
+  const isConfigured = !CONFIG.API_URL.includes("YOUR_API_ID") && !CONFIG.API_KEY.includes("YOUR_API_KEY_VALUE");
+  if (!isConfigured) document.getElementById("configBanner").classList.add("is-visible");
+
+  document.getElementById("footerYear").textContent = String(new Date().getFullYear());
+
+  // No login required for this page — but if a valid session happens to
+  // exist, show the user badge instead of the login/signup links.
+  const user = getCurrentUser();
+  if (user) {
+    document.getElementById("userEmail").textContent = user.email || "";
+    document.getElementById("userAvatar").textContent = (user.email || "?").charAt(0).toUpperCase();
+    document.getElementById("userBadge").style.display = "flex";
+    document.getElementById("logoutBtn").addEventListener("click", function () {
+      authLogout();
+      window.location.reload();
+    });
+  } else {
+    document.getElementById("guestLinks").style.display = "flex";
+  }
+
+  const state = { images: [], filtered: [], sort: "newest", query: "" };
+
+  const el = {};
+  ["statCount","galleryGrid","gallerySub","searchInput","sortSelect","toastStack",
+   "detailOverlay","detailImage","detailTitle","detailMeta","detailDesc","detailClose","detailOpenBtn"
+  ].forEach(function (id) { el[id] = document.getElementById(id); });
+
+  function toast(message, type) {
+    type = type || "error";
+    var icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+    var node = document.createElement("div");
+    node.className = "toast " + type;
+    node.innerHTML = '<span class="toast__icon">' + icon + '</span><span class="toast__msg"></span>';
+    node.querySelector(".toast__msg").textContent = message;
+    el.toastStack.appendChild(node);
+    setTimeout(function () {
+      node.classList.add("is-leaving");
+      setTimeout(function () { node.remove(); }, 260);
+    }, 4200);
+  }
+
+  function escapeHtml(str) { var d = document.createElement("div"); d.textContent = str; return d.innerHTML; }
+
+  function maskEmail(email) {
+    if (!email) return "Someone";
+    var parts = email.split("@");
+    if (parts.length !== 2) return "Someone";
+    var name = parts[0];
+    var masked = name.length <= 2 ? name.charAt(0) + "…" : name.slice(0, 2) + "…";
+    return masked + "@" + parts[1];
+  }
+
+  function formatDate(iso) {
+    try {
+      var d = new Date(iso);
+      return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+    } catch (e) { return ""; }
+  }
+
+  function renderSkeletons(count) {
+    var html = "";
+    for (var i = 0; i < count; i++) html += '<div class="skeleton-card"><div class="skeleton-block"></div><div class="skeleton-block sk-line"></div><div class="skeleton-block sk-line sk-sm"></div></div>';
+    el.galleryGrid.innerHTML = html;
+  }
+  function renderEmptyState() {
+    el.galleryGrid.innerHTML = '<div class="state-panel"><div class="state-panel__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div><h3>No public images yet</h3><p>Be the first to share one — <a href="login.html" style="color:var(--blue); font-weight:600;">log in to upload</a>.</p></div>';
+  }
+  function renderNoResults() {
+    el.galleryGrid.innerHTML = '<div class="state-panel"><div class="state-panel__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div><h3>No matches</h3><p>Nothing matches "' + escapeHtml(state.query) + '".</p></div>';
+  }
+  function renderErrorState(message) {
+    el.galleryGrid.innerHTML = '<div class="state-panel is-error"><div class="state-panel__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9L2.8 17a1.9 1.9 0 0 0 1.6 2.9h15.2a1.9 1.9 0 0 0 1.6-2.9L13.7 3.9a1.9 1.9 0 0 0-3.4 0z"/></svg></div><h3>Couldn\'t load the gallery</h3><p>' + escapeHtml(message) + '</p><button class="btn btn-primary" id="retryLoadBtn">Try again</button></div>';
+    var retryBtn = document.getElementById("retryLoadBtn");
+    if (retryBtn) retryBtn.addEventListener("click", loadImages);
+  }
+
+  function applyFilters() {
+    var list = state.images.slice();
+    if (state.query) {
+      var q = state.query.toLowerCase();
+      list = list.filter(function (img) { return (img.name || "").toLowerCase().indexOf(q) !== -1 || (img.description || "").toLowerCase().indexOf(q) !== -1; });
+    }
+    list.sort(function (a, b) {
+      switch (state.sort) {
+        case "oldest": return new Date(a.createdAt) - new Date(b.createdAt);
+        case "name-asc": return (a.name || "").localeCompare(b.name || "");
+        case "name-desc": return (b.name || "").localeCompare(a.name || "");
+        default: return new Date(b.createdAt) - new Date(a.createdAt);
+      }
+    });
+    state.filtered = list;
+    renderGallery();
+  }
+
+  function renderGallery() {
+    if (state.images.length === 0) { renderEmptyState(); return; }
+    if (state.filtered.length === 0) { renderNoResults(); return; }
+
+    el.galleryGrid.innerHTML = state.filtered.map(function (img, i) {
+      return (
+        '<article class="card" data-id="' + img.id + '" style="animation-delay:' + Math.min(i * 40, 400) + 'ms">' +
+          '<div class="card__frame"><img src="' + img.imageUrl + '" alt="' + escapeHtml(img.name) + '" loading="lazy" /></div>' +
+          '<div class="card__body">' +
+            '<h4 class="card__name">' + escapeHtml(img.name) + '</h4>' +
+            '<p class="card__desc">' + escapeHtml(img.description) + '</p>' +
+            '<div class="card__meta"><span>' + escapeHtml(maskEmail(img.ownerEmail)) + '</span><span>' + formatDate(img.createdAt) + '</span></div>' +
+          '</div>' +
+        '</article>'
+      );
+    }).join("");
+  }
+
+  async function loadImages() {
+    if (!isConfigured) { renderErrorState("API isn't configured yet."); return; }
+    renderSkeletons(8);
+    try {
+      let response;
+      try {
+        response = await fetch(CONFIG.API_URL + "/images/public", { headers: { "X-Api-Key": CONFIG.API_KEY } });
+      } catch (networkError) {
+        throw new Error("Could not reach the API (network or CORS error).");
+      }
+      if (!response.ok) throw new Error("Request failed with status " + response.status);
+      const data = await response.json();
+      state.images = (data && data.images) || [];
+      el.statCount.textContent = String(state.images.length);
+      applyFilters();
+    } catch (err) {
+      console.error(err);
+      renderErrorState(err.message || "Something went wrong.");
+    }
+  }
+
+  let searchDebounce;
+  el.searchInput.addEventListener("input", function (e) {
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(function () { state.query = e.target.value.trim(); applyFilters(); }, 180);
+  });
+  el.sortSelect.addEventListener("change", function (e) { state.sort = e.target.value; applyFilters(); });
+
+  el.galleryGrid.addEventListener("click", function (e) {
+    var card = e.target.closest(".card");
+    if (!card) return;
+    var img = state.images.find(function (i) { return i.id === card.dataset.id; });
+    if (!img) return;
+    el.detailImage.src = img.imageUrl;
+    el.detailImage.alt = img.name;
+    el.detailTitle.textContent = img.name;
+    el.detailDesc.textContent = img.description;
+    el.detailMeta.textContent = "By " + maskEmail(img.ownerEmail) + " · " + formatDate(img.createdAt);
+    el.detailOpenBtn.href = img.imageUrl;
+    el.detailOverlay.classList.add("is-open");
+    document.body.style.overflow = "hidden";
+  });
+  el.detailClose.addEventListener("click", closeDetail);
+  el.detailOverlay.addEventListener("click", function (e) { if (e.target === el.detailOverlay) closeDetail(); });
+  function closeDetail() { el.detailOverlay.classList.remove("is-open"); document.body.style.overflow = ""; }
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeDetail(); });
+
+  loadImages();
+})();
+</script>
+
+</body>
+</html>

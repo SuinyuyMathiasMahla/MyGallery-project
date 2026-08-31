@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Log in &mdash; Vault</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+
+<div class="config-banner" id="configBanner">
+  <div class="shell">⚠️ This app isn't fully configured yet — check the setup instructions.</div>
+</div>
+
+<header class="topbar">
+  <div class="shell topbar__inner">
+    <a href="public.html" class="brand" style="text-decoration:none;">
+      <span class="brand__mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
+      </span>
+      Vault
+    </a>
+    <a href="public.html" class="topbar__link">Browse public gallery &rarr;</a>
+  </div>
+</header>
+
+<div class="auth-shell">
+  <div class="auth-card">
+    <div class="auth-card__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    </div>
+    <h1>Welcome back</h1>
+    <p class="sub">Log in to upload images and manage your private gallery.</p>
+
+    <form id="loginForm">
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@example.com" required autocomplete="email" />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required autocomplete="current-password" />
+      </div>
+      <button type="submit" class="btn btn-primary full-width" id="loginBtn">
+        <span id="loginBtnText">Log in</span>
+      </button>
+    </form>
+
+    <div class="auth-card__footer">
+      Don't have an account? <a href="signup.html">Sign up</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<script src="assets/auth.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  if (AUTH_CONFIG.REGION.includes("YOUR_REGION") || AUTH_CONFIG.USER_POOL_CLIENT_ID.includes("YOUR_USER_POOL")) {
+    document.getElementById("configBanner").classList.add("is-visible");
+  }
+
+  // Already logged in? Skip straight to the dashboard.
+  if (getCurrentUser()) {
+    window.location.href = "index.html";
+  }
+
+  var toastStack = document.getElementById("toastStack");
+  var ICONS = {
+    error: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>',
+  };
+  function toast(message, type) {
+    var node = document.createElement("div");
+    node.className = "toast " + (type || "error");
+    node.innerHTML = '<span class="toast__icon">' + ICONS.error + '</span><span class="toast__msg"></span>';
+    node.querySelector(".toast__msg").textContent = message;
+    toastStack.appendChild(node);
+    setTimeout(function () {
+      node.classList.add("is-leaving");
+      setTimeout(function () { node.remove(); }, 260);
+    }, 4200);
+  }
+
+  var form = document.getElementById("loginForm");
+  var btn = document.getElementById("loginBtn");
+  var btnText = document.getElementById("loginBtnText");
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    var email = document.getElementById("email").value.trim();
+    var password = document.getElementById("password").value;
+
+    if (!email || !password) { toast("Enter your email and password."); return; }
+
+    btn.disabled = true;
+    btnText.innerHTML = '<span class="spinner"></span>';
+
+    try {
+      await authLogin(email, password);
+      window.location.href = "index.html";
+    } catch (err) {
+      console.error(err);
+      var msg = err.message || "Login failed.";
+      if (msg.indexOf("UserNotConfirmedException") !== -1) {
+        toast("Please confirm your email first.");
+        setTimeout(function () { window.location.href = "signup.html?email=" + encodeURIComponent(email) + "&step=confirm"; }, 1200);
+      } else if (msg.indexOf("NotAuthorizedException") !== -1) {
+        toast("Incorrect email or password.");
+      } else {
+        toast(msg);
+      }
+      btn.disabled = false;
+      btnText.textContent = "Log in";
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
