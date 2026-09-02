@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="assets/styles.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
 
@@ -221,5 +222,13 @@
 })();
 </script>
 
+<script>
+(function(){
+  const root=document.documentElement, btn=document.getElementById("themeToggle");
+  const saved=localStorage.getItem("vault-theme") || "shine"; root.dataset.theme=saved;
+  function sync(){ if(!btn)return; const white=root.dataset.theme==="white"; btn.innerHTML=white?'<i class="fa-solid fa-wand-magic-sparkles"></i><span>Shine</span>':'<i class="fa-solid fa-sun"></i><span>White</span>'; btn.setAttribute("aria-label",white?"Switch to shiny background":"Switch to white background"); btn.title=white?"Switch to shiny background":"Switch to white background"; }
+  sync(); btn?.addEventListener("click",()=>{root.dataset.theme=root.dataset.theme==="white"?"shine":"white";localStorage.setItem("vault-theme",root.dataset.theme);sync();});
+})();
+</script>
 </body>
 </html>
